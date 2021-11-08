@@ -31,7 +31,7 @@ ENDIF()
 
 # Set build flags, set ARM_ARCHITECTURE environment variable on Odroid
 # Set build flags. Set IS_ARM on odroid board as environment variable
-SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
+SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
 IF(DEFINED ENV{ARM_ARCHITECTURE})
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpu=neon -march=armv7-a")
 ELSE()
@@ -46,15 +46,18 @@ SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -fsee -fomit-frame-pointer -
 
 # Add plain cmake packages 
 FIND_PACKAGE(OpenCV REQUIRED)
-FIND_PACKAGE(Eigen REQUIRED)
+FIND_PACKAGE(Eigen3 REQUIRED)
 FIND_PACKAGE(Sophus REQUIRED)
 FIND_PACKAGE(fast REQUIRED)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS thread system)
 
+set(Eigen3_LIBRARIES Eigen3::Eigen)
+set(Sophus_LIBRARIES Sophus::Sophus)
+
 IF(USE_ROS)
   FIND_PACKAGE(catkin REQUIRED COMPONENTS roscpp roslib cmake_modules vikit_common vikit_ros)
   catkin_package(
-      DEPENDS Eigen OpenCV Sophus Boost fast
+      DEPENDS Eigen3 OpenCV Sophus Boost fast
       CATKIN_DEPENDS roscpp roslib vikit_common vikit_ros
       INCLUDE_DIRS include
       LIBRARIES svo
@@ -78,9 +81,10 @@ INCLUDE_DIRECTORIES(
 # Set link libraries
 LIST(APPEND LINK_LIBS 
   ${OpenCV_LIBS}
-  ${Sophus_LIBRARIES}
   ${Boost_LIBRARIES}
   ${fast_LIBRARIES}
+  Sophus::Sophus
+  Eigen3::Eigen
 )
 
 IF(USE_ROS)
