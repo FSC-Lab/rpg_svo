@@ -48,7 +48,7 @@ class MatcherTest {
     frame_cur_ = new svo::Frame(cam_, img_cur, 2.0);
     ref_ftr_ = new svo::Feature(frame_ref_, Eigen::Vector2d(300, 260), 0);
 
-    // set poses
+    // std::set poses
     Eigen::Vector3d t_w_ref(0.1131, 0.1131, 2.0000);
     Eigen::Vector3d t_w_cur(0.5673, 0.5641, 2.0000);
     Eigen::Quaterniond q_w_ref(0.0, 0.8227, 0.2149, 0.0);

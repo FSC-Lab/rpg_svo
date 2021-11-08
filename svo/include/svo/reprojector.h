@@ -31,7 +31,7 @@ class Point;
 
 /// Project points from the map into the image and find the corresponding
 /// feature (corner). We don't search a match for every point but only for one
-/// point per cell. Thereby, we achieve a homogeneously distributed set of
+/// point per cell. Thereby, we achieve a homogeneously distributed std::set of
 /// matched features and at the same time we can save processing time by not
 /// projecting all points.
 class Reprojector
@@ -41,7 +41,7 @@ public:
 
   /// Reprojector config parameters
   struct Options {
-    size_t max_n_kfs;   //!< max number of keyframes to reproject from
+    size_t max_n_kfs;   //!< std::max number of keyframes to reproject from
     bool find_match_direct;
     Options()
     : max_n_kfs(10),
@@ -75,11 +75,11 @@ private:
   typedef std::list<Candidate > Cell;
   typedef std::vector<Cell*> CandidateGrid;
 
-  /// The grid stores a set of candidate matches. For every grid cell we try to find one match.
+  /// The grid stores a std::set of candidate matches. For every grid cell we try to find one match.
   struct Grid
   {
     CandidateGrid cells;
-    vector<int> cell_order;
+    std::vector<int> cell_order;
     int cell_size;
     int grid_n_cols;
     int grid_n_rows;

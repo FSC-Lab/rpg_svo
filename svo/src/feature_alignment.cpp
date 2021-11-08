@@ -526,7 +526,7 @@ bool align2D_NEON (
       uint16x8_t v10 = vmovl_u8( vld1_u8( it + cur_step ) );
       uint16x8_t v11 = vmovl_u8( vld1_u8( it + cur_step + 1 ) );
 
-      // vector multiply by scalar
+      // std::vector multiply by scalar
       v00 = vmulq_n_u16( v00, wTL );
       v01 = vmulq_n_u16( v01, wTR );
       v10 = vmulq_n_u16( v10, wBL );

@@ -87,8 +87,8 @@ public:
 
 protected:
   Stage stage_;                 //!< Current stage of the algorithm.
-  bool set_reset_;              //!< Flag that the user can set. Will reset the system before the next iteration.
-  bool set_start_;              //!< Flag the user can set to start the system when the next image is received.
+  bool set_reset_;              //!< Flag that the user can std::set. Will reset the system before the next iteration.
+  bool set_start_;              //!< Flag the user can std::set to start the system when the next image is received.
   Map map_;                     //!< Map of keyframes created by the slam system.
   vk::Timer timer_;             //!< Stopwatch to measure time to process frame.
   vk::RingBuffer<double> acc_frame_timings_;    //!< Total processing time of the last 10 frames, used to give some user feedback on the performance.

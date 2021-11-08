@@ -75,8 +75,8 @@ public:
   {
     bool align_1d;              //!< in epipolar search: align patch 1D along epipolar line
     int align_max_iter;         //!< number of iterations for aligning the feature patches in gauss newton
-    double max_epi_length_optim;//!< max length of epipolar line to skip epipolar search and directly go to img align
-    size_t max_epi_search_steps;//!< max number of evaluations along epipolar line
+    double max_epi_length_optim;//!< std::max length of epipolar line to skip epipolar search and directly go to img align
+    size_t max_epi_search_steps;//!< std::max number of evaluations along epipolar line
     bool subpix_refinement;     //!< do gauss newton feature patch alignment after epipolar search
     bool epi_search_edgelet_filtering;
     double epi_search_edgelet_max_angle;
@@ -106,7 +106,7 @@ public:
   ~Matcher() = default;
 
   /// Find a match by directly applying subpix refinement.
-  /// IMPORTANT! This function assumes that px_cur is already set to an estimate that is within ~2-3 pixel of the final result!
+  /// IMPORTANT! This function assumes that px_cur is already std::set to an estimate that is within ~2-3 pixel of the final result!
   bool findMatchDirect(
       const Point& pt,
       const Frame& frame,

@@ -208,7 +208,7 @@ void DepthFilter::updateSeeds(FramePtr frame)
 
   while( it!=seeds_.end())
   {
-    // set this value true when seeds updating should be interrupted
+    // std::set this value true when seeds updating should be interrupted
     if(seeds_updating_halt_)
       return;
 
@@ -232,7 +232,7 @@ void DepthFilter::updateSeeds(FramePtr frame)
 
     // we are using inverse depth coordinates
     float z_inv_min = it->mu + sqrt(it->sigma2);
-    float z_inv_max = max(it->mu - sqrt(it->sigma2), 0.00000001f);
+    float z_inv_max = std::max(it->mu - sqrt(it->sigma2), 0.00000001f);
     double z;
     if(!matcher_.findEpipolarMatchDirect(
         *it->ftr->frame, *frame, *it->ftr, 1.0/it->mu, 1.0/z_inv_min, 1.0/z_inv_max, z))
@@ -245,7 +245,7 @@ void DepthFilter::updateSeeds(FramePtr frame)
 
     // compute tau
     double tau = computeTau(T_ref_cur, it->ftr->f, z, px_error_angle);
-    double tau_inverse = 0.5 * (1.0/max(0.0000001, z-tau) - 1.0/(z+tau));
+    double tau_inverse = 0.5 * (1.0/std::max(0.0000001, z-tau) - 1.0/(z+tau));
 
     // update the estimate
     updateSeed(1./z, tau_inverse*tau_inverse, &*it);
@@ -276,7 +276,7 @@ void DepthFilter::updateSeeds(FramePtr frame)
       else
       */
       {
-        seed_converged_cb_(point, it->sigma2); // put in candidate list
+        seed_converged_cb_(point, it->sigma2); // put in candidate std::list
       }
       it = seeds_.erase(it);
     }

@@ -32,17 +32,17 @@ class Seed;
 class MapPointCandidates
 {
 public:
-  typedef pair<Point*, Feature*> PointCandidate;
-  typedef list<PointCandidate> PointCandidateList;
+  typedef std::pair<Point*, Feature*> PointCandidate;
+  typedef std::list<PointCandidate> PointCandidateList;
 
-  /// The depth-filter is running in a parallel thread and fills the canidate list.
+  /// The depth-filter is running in a parallel thread and fills the canidate std::list.
   /// This mutex controls concurrent access to point_candidates.
   boost::mutex mut_;
 
   /// Candidate points are created from converged seeds.
   /// Until the next keyframe, these points can be used for reprojection and pose optimization.
   PointCandidateList candidates_;
-  list< Point* > trash_points_;
+  std::list< Point* > trash_points_;
 
   MapPointCandidates();
   ~MapPointCandidates();
@@ -50,16 +50,16 @@ public:
   /// Add a candidate point.
   void newCandidatePoint(Point* point, double depth_sigma2);
 
-  /// Adds the feature to the frame and deletes candidate from list.
+  /// Adds the feature to the frame and deletes candidate from std::list.
   void addCandidatePointToFrame(FramePtr frame);
 
-  /// Remove a candidate point from the list of candidates.
+  /// Remove a candidate point from the std::list of candidates.
   bool deleteCandidatePoint(Point* point);
 
   /// Remove all candidates that belong to a frame.
   void removeFrameCandidates(FramePtr frame);
 
-  /// Reset the candidate list, remove and delete all points.
+  /// Reset the candidate std::list, remove and delete all points.
   void reset();
 
   void deleteCandidate(PointCandidate& c);
@@ -71,8 +71,8 @@ public:
 class Map : boost::noncopyable
 {
 public:
-  list< FramePtr > keyframes_;          //!< List of keyframes in the map.
-  list< Point* > trash_points_;         //!< A deleted point is moved to the trash bin. Now and then this is cleaned. One reason is that the visualizer must remove the points also.
+  std::list< FramePtr > keyframes_;          //!< List of keyframes in the map.
+  std::list< Point* > trash_points_;         //!< A deleted point is moved to the trash bin. Now and then this is cleaned. One reason is that the visualizer must remove the points also.
   MapPointCandidates point_candidates_;
 
   Map();
@@ -97,7 +97,7 @@ public:
   void addKeyframe(FramePtr new_keyframe);
 
   /// Given a frame, return all keyframes which have an overlapping field of view.
-  void getCloseKeyframes(const FramePtr& frame, list< pair<FramePtr,double> >& close_kfs) const;
+  void getCloseKeyframes(const FramePtr& frame, std::list< std::pair<FramePtr,double> >& close_kfs) const;
 
   /// Return the keyframe which is spatially closest and has overlapping field of view.
   FramePtr getClosestKeyframe(const FramePtr& frame) const;
@@ -112,7 +112,7 @@ public:
 
   /// Empty trash bin of deleted keyframes and map points. We don't delete the
   /// points immediately to ensure proper cleanup and to provide the visualizer
-  /// a list of objects which must be removed.
+  /// a std::list of objects which must be removed.
   void emptyTrash();
 
   /// Return the keyframe which was last inserted in the map.

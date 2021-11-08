@@ -81,7 +81,7 @@ void FrameHandlerMono::addImage(const cv::Mat& img, const double timestamp)
     res = relocalizeFrame(SE3(Matrix3d::Identity(), Vector3d::Zero()),
                           map_.getClosestKeyframe(last_frame_));
 
-  // set last frame
+  // std::set last frame
   last_frame_ = new_frame_;
   new_frame_.reset();
   // finish processing
@@ -316,11 +316,11 @@ bool FrameHandlerMono::needNewKf(double scene_depth_mean)
 
 void FrameHandlerMono::setCoreKfs(size_t n_closest)
 {
-  size_t n = min(n_closest, overlap_kfs_.size()-1);
+  size_t n = std::min(n_closest, overlap_kfs_.size()-1);
   std::partial_sort(overlap_kfs_.begin(), overlap_kfs_.begin()+n, overlap_kfs_.end(),
-                    boost::bind(&pair<FramePtr, size_t>::second, _1) >
-                    boost::bind(&pair<FramePtr, size_t>::second, _2));
-  std::for_each(overlap_kfs_.begin(), overlap_kfs_.end(), [&](pair<FramePtr,size_t>& i){ core_kfs_.insert(i.first); });
+                    boost::bind(&std::pair<FramePtr, size_t>::second, _1) >
+                    boost::bind(&std::pair<FramePtr, size_t>::second, _2));
+  std::for_each(overlap_kfs_.begin(), overlap_kfs_.end(), [&](std::pair<FramePtr,size_t>& i){ core_kfs_.insert(i.first); });
 }
 
 } // namespace svo

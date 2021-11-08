@@ -51,10 +51,10 @@ void twoViewBA(
   g2o::SparseOptimizer optimizer;
   setupG2o(&optimizer);
 
-  list<EdgeContainerSE3> edges;
+  std::list<EdgeContainerSE3> edges;
   size_t v_id = 0;
 
-  // New Keyframe Vertex 1: This Keyframe is set to fixed!
+  // New Keyframe Vertex 1: This Keyframe is std::set to fixed!
   g2oFrameSE3* v_frame1 = createG2oFrameSE3(frame1, v_id++, true);
   optimizer.addVertex(v_frame1);
 
@@ -105,7 +105,7 @@ void twoViewBA(
   // Find Mappoints with too large reprojection error
   const double reproj_thresh_squared = reproj_thresh*reproj_thresh;
   size_t n_incorrect_edges = 0;
-  for(list<EdgeContainerSE3>::iterator it_e = edges.begin(); it_e != edges.end(); ++it_e)
+  for(std::list<EdgeContainerSE3>::iterator it_e = edges.begin(); it_e != edges.end(); ++it_e)
     if(it_e->edge->chi2() > reproj_thresh_squared)
     {
       if(it_e->feature->point != NULL)
@@ -121,7 +121,7 @@ void twoViewBA(
 
 void localBA(
     Frame* center_kf,
-    set<FramePtr>* core_kfs,
+    std::set<FramePtr>* core_kfs,
     Map* map,
     size_t& n_incorrect_edges_1,
     size_t& n_incorrect_edges_2,
@@ -133,9 +133,9 @@ void localBA(
   g2o::SparseOptimizer optimizer;
   setupG2o(&optimizer);
 
-  list<EdgeContainerSE3> edges;
-  set<Point*> mps;
-  list<Frame*> neib_kfs;
+  std::list<EdgeContainerSE3> edges;
+  std::set<Point*> mps;
+  std::list<Frame*> neib_kfs;
   size_t v_id = 0;
   size_t n_mps = 0;
   size_t n_fix_kfs = 0;
@@ -145,7 +145,7 @@ void localBA(
   n_incorrect_edges_2 = 0;
 
   // Add all core keyframes
-  for(set<FramePtr>::iterator it_kf = core_kfs->begin(); it_kf != core_kfs->end(); ++it_kf)
+  for(std::set<FramePtr>::iterator it_kf = core_kfs->begin(); it_kf != core_kfs->end(); ++it_kf)
   {
     g2oFrameSE3* v_kf = createG2oFrameSE3(it_kf->get(), v_id++, false);
     (*it_kf)->v_kf_ = v_kf;
@@ -159,11 +159,11 @@ void localBA(
   }
 
   // Now go throug all the points and add a measurement. Add a fixed neighbour
-  // Keyframe if it is not in the set of core kfs
+  // Keyframe if it is not in the std::set of core kfs
   double reproj_thresh_2 = Config::lobaThresh() / center_kf->cam_->errorMultiplier2();
   double reproj_thresh_1 = Config::poseOptimThresh() / center_kf->cam_->errorMultiplier2();
   double reproj_thresh_1_squared = reproj_thresh_1*reproj_thresh_1;
-  for(set<Point*>::iterator it_pt = mps.begin(); it_pt!=mps.end(); ++it_pt)
+  for(std::set<Point*>::iterator it_pt = mps.begin(); it_pt!=mps.end(); ++it_pt)
   {
     // Create point vertex
     g2oPoint* v_pt = createG2oPoint((*it_pt)->pos_, v_id++, false);
@@ -172,7 +172,7 @@ void localBA(
     ++n_mps;
 
     // Add edges
-    list<Feature*>::iterator it_obs=(*it_pt)->obs_.begin();
+    std::list<Feature*>::iterator it_obs=(*it_pt)->obs_.begin();
     while(it_obs!=(*it_pt)->obs_.end())
     {
       Vector2d error = vk::project2d((*it_obs)->f) - vk::project2d((*it_obs)->frame->w2f((*it_pt)->pos_));
@@ -217,18 +217,18 @@ void localBA(
     runSparseBAOptimizer(&optimizer, Config::lobaNumIter(), init_error, final_error);
 
   // Update Keyframes
-  for(set<FramePtr>::iterator it = core_kfs->begin(); it != core_kfs->end(); ++it)
+  for(std::set<FramePtr>::iterator it = core_kfs->begin(); it != core_kfs->end(); ++it)
   {
     (*it)->T_f_w_ = SE3( (*it)->v_kf_->estimate().rotation(),
                          (*it)->v_kf_->estimate().translation());
     (*it)->v_kf_ = NULL;
   }
 
-  for(list<Frame*>::iterator it = neib_kfs.begin(); it != neib_kfs.end(); ++it)
+  for(std::list<Frame*>::iterator it = neib_kfs.begin(); it != neib_kfs.end(); ++it)
     (*it)->v_kf_ = NULL;
 
   // Update Mappoints
-  for(set<Point*>::iterator it = mps.begin(); it != mps.end(); ++it)
+  for(std::set<Point*>::iterator it = mps.begin(); it != mps.end(); ++it)
   {
     (*it)->pos_ = (*it)->v_pt_->estimate();
     (*it)->v_pt_ = NULL;
@@ -236,7 +236,7 @@ void localBA(
 
   // Remove Measurements with too large reprojection error
   double reproj_thresh_2_squared = reproj_thresh_2*reproj_thresh_2;
-  for(list<EdgeContainerSE3>::iterator it = edges.begin(); it != edges.end(); ++it)
+  for(std::list<EdgeContainerSE3>::iterator it = edges.begin(); it != edges.end(); ++it)
   {
     if(it->edge->chi2() > reproj_thresh_2_squared) //*(1<<it->feature_->level))
     {
@@ -256,15 +256,15 @@ void globalBA(Map* map)
   g2o::SparseOptimizer optimizer;
   setupG2o(&optimizer);
 
-  list<EdgeContainerSE3> edges;
-  list< pair<FramePtr,Feature*> > incorrect_edges;
+  std::list<EdgeContainerSE3> edges;
+  std::list< std::pair<FramePtr,Feature*> > incorrect_edges;
 
   // Go through all Keyframes
   size_t v_id = 0;
   double reproj_thresh_2 = Config::lobaThresh() / map->lastKeyframe()->cam_->errorMultiplier2();
   double reproj_thresh_1_squared = Config::poseOptimThresh() / map->lastKeyframe()->cam_->errorMultiplier2();
   reproj_thresh_1_squared *= reproj_thresh_1_squared;
-  for(list<FramePtr>::iterator it_kf = map->keyframes_.begin();
+  for(std::list<FramePtr>::iterator it_kf = map->keyframes_.begin();
       it_kf != map->keyframes_.end(); ++it_kf)
   {
     // New Keyframe Vertex
@@ -290,7 +290,7 @@ void globalBA(Map* map)
       // have a very large reprojection error which may result in distorted results.
       Vector2d error = vk::project2d((*it_ftr)->f) - vk::project2d((*it_kf)->w2f(mp->pos_));
       if(error.squaredNorm() > reproj_thresh_1_squared)
-        incorrect_edges.push_back(pair<FramePtr,Feature*>(*it_kf, *it_ftr));
+        incorrect_edges.push_back(std::pair<FramePtr,Feature*>(*it_kf, *it_ftr));
       else
       {
         g2oEdgeSE3* e = createG2oEdgeSE3(v_kf, v_mp, vk::project2d((*it_ftr)->f),
@@ -309,7 +309,7 @@ void globalBA(Map* map)
     runSparseBAOptimizer(&optimizer, Config::lobaNumIter(), init_error, final_error);
 
   // Update Keyframe and MapPoint Positions
-  for(list<FramePtr>::iterator it_kf = map->keyframes_.begin();
+  for(std::list<FramePtr>::iterator it_kf = map->keyframes_.begin();
         it_kf != map->keyframes_.end(); ++it_kf)
   {
     (*it_kf)->T_f_w_ = SE3( (*it_kf)->v_kf_->estimate().rotation(),
@@ -328,12 +328,12 @@ void globalBA(Map* map)
   }
 
   // Remove Measurements with too large reprojection error
-  for(list< pair<FramePtr,Feature*> >::iterator it=incorrect_edges.begin();
+  for(std::list< std::pair<FramePtr,Feature*> >::iterator it=incorrect_edges.begin();
       it!=incorrect_edges.end(); ++it)
     map->removePtFrameRef(it->first.get(), it->second);
 
   double reproj_thresh_2_squared = reproj_thresh_2*reproj_thresh_2;
-  for(list<EdgeContainerSE3>::iterator it = edges.begin(); it != edges.end(); ++it)
+  for(std::list<EdgeContainerSE3>::iterator it = edges.begin(); it != edges.end(); ++it)
   {
     if(it->edge->chi2() > reproj_thresh_2_squared)
     {

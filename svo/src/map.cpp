@@ -71,7 +71,7 @@ void Map::removePtFrameRef(Frame* frame, Feature* ftr)
   ftr->point = NULL;
   if(pt->obs_.size() <= 2)
   {
-    // If the references list of mappoint has only size=2, delete mappoint
+    // If the references std::list of mappoint has only size=2, delete mappoint
     safeDeletePoint(pt);
     return;
   }
@@ -128,7 +128,7 @@ void Map::getCloseKeyframes(
 
 FramePtr Map::getClosestKeyframe(const FramePtr& frame) const
 {
-  list< pair<FramePtr,double> > close_kfs;
+  std::list< std::pair<FramePtr,double> > close_kfs;
   getCloseKeyframes(frame, close_kfs);
   if(close_kfs.empty())
   {

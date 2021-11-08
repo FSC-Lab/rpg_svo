@@ -154,7 +154,7 @@ bool Matcher::findMatchDirect(
                    ref_ftr_->level, search_level_, halfpatch_size_+1, patch_with_border_);
   createPatchFromPatchWithBorder();
 
-  // px_cur should be set
+  // px_cur should be std::set
   Vector2d px_scaled(px_cur/(1<<search_level_));
 
   bool success = false;

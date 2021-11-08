@@ -37,7 +37,7 @@ void optimizeGaussNewton(
 {
   // init
   double chi2(0.0);
-  vector<double> chi2_vec_init, chi2_vec_final;
+  std::vector<double> chi2_vec_init, chi2_vec_final;
   vk::robust_cost::TukeyWeightFunction weight_function;
   SE3 T_old(frame->T_f_w_);
   Matrix6d A;

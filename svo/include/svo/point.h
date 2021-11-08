@@ -44,13 +44,13 @@ public:
     TYPE_GOOD
   };
 
-  static int                  point_counter_;           //!< Counts the number of created points. Used to set the unique id.
+  static int                  point_counter_;           //!< Counts the number of created points. Used to std::set the unique id.
   int                         id_;                      //!< Unique ID of the point.
   Vector3d                    pos_;                     //!< 3d pos of the point in the world coordinate frame.
   Vector3d                    normal_;                  //!< Surface normal at point.
   Matrix3d                    normal_information_;      //!< Inverse covariance matrix of normal estimation.
   bool                        normal_set_;              //!< Flag whether the surface normal was estimated or not.
-  list<Feature*>              obs_;                     //!< References to keyframes which observe the point.
+  std::list<Feature*>              obs_;                     //!< References to keyframes which observe the point.
   size_t                      n_obs_;                   //!< Number of obervations: Keyframes AND successful reprojections in intermediate frames.
   g2oPoint*                   v_pt_;                    //!< Temporary pointer to the point-vertex in g2o during bundle adjustment.
   int                         last_published_ts_;       //!< Timestamp of last publishing.

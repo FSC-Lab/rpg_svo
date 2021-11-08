@@ -76,7 +76,7 @@ void SparseImgAlignTest::testSequence(
   {
     // load img
     // IMPORTANT: We need to flip the image because the Povray dataset has a
-    // negative focal length in y direction which we didn't set.
+    // negative focal length in y direction which we didn't std::set.
     std::string img_name(dataset_dir+"/img/" + iter->image_name_ + "_0.png");
     cv::Mat img(cv::imread(img_name, 0));
     assert(!img.empty());
@@ -87,7 +87,7 @@ void SparseImgAlignTest::testSequence(
 
     if(i==0)
     {
-      // set reference frame
+      // std::set reference frame
       frame_ref_.reset(new svo::Frame(cam_, img, 0.0));
       frame_ref_->T_f_w_ = T_gt_w;
 

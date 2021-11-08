@@ -49,7 +49,7 @@ class PoseOptimizerTest {
     // create frame
     frame_.reset(new svo::Frame(cam_, img, 1.0));
 
-    // set pose
+    // std::set pose
     Eigen::Vector3d t_w_ref(0.1131, 0.1131, 2.0000);
     Eigen::Quaterniond q_w_ref(0.0, 0.8227, 0.2149, 0.0);
     frame_->T_f_w_ = Sophus::SE3(q_w_ref, t_w_ref).inverse();

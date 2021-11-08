@@ -215,7 +215,7 @@ void BenchmarkNode::runBlenderBenchmark(const std::string& dataset_dir)
     // Set reference frame with depth
     if(frame_count_ == 0)
     {
-      // set reference frame at ground-truth pose
+      // std::set reference frame at ground-truth pose
       FramePtr frame_ref(new Frame(cam_, img, it->timestamp_));
       frame_ref->T_f_w_ = T_w_gt.inverse();
 
