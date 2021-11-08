@@ -39,9 +39,9 @@ void optimizeGaussNewton(
   double chi2(0.0);
   std::vector<double> chi2_vec_init, chi2_vec_final;
   vk::robust_cost::TukeyWeightFunction weight_function;
-  SE3 T_old(frame->T_f_w_);
+  Sophus::SE3d T_old(frame->T_f_w_);
   Matrix6d A;
-  Vector6d b;
+  Sophus::Vector6d b;
 
   // compute the scale of the error for robust estimation
   std::vector<float> errors; errors.reserve(frame->fts_.size());
@@ -94,7 +94,7 @@ void optimizeGaussNewton(
     }
 
     // solve linear system
-    const Vector6d dT(A.ldlt().solve(b));
+    const Sophus::Vector6d dT(A.ldlt().solve(b));
 
     // check if error increased
     if((iter > 0 && new_chi2 > chi2) || (bool) std::isnan((double)dT[0]))
@@ -107,7 +107,7 @@ void optimizeGaussNewton(
     }
 
     // update the model
-    SE3 T_new = SE3::exp(dT)*frame->T_f_w_;
+    Sophus::SE3d T_new = Sophus::SE3d::exp(dT)*frame->T_f_w_;
     T_old = frame->T_f_w_;
     frame->T_f_w_ = T_new;
     chi2 = new_chi2;

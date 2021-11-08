@@ -26,7 +26,7 @@
 
 #include <Eigen/Core>
 #include <opencv2/opencv.hpp>
-#include <sophus/se3.h>
+#include <sophus/se3.hpp>
 #include <vikit/performance_monitor.h>
 #include <boost/shared_ptr.hpp>
 #include<Eigen/StdVector>
@@ -72,7 +72,6 @@ EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(Eigen::Vector2d)
 namespace svo
 {
   using namespace Eigen;
-  using namespace Sophus;
 
   const double EPS = 0.0000000001;
   const double PI = 3.14159265;
